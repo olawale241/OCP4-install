@@ -1,0 +1,40 @@
+apiVersion: v1
+baseDomain: <your-base-domain>
+metadata:
+  name: <your-cluster-name>
+compute:
+- hyperthreading: Enabled # Set to Disabled if using hyperthreading
+  name: worker
+  platform: {}
+  replicas: 3  # Number of worker nodes
+controlPlane:
+  hyperthreading: Enabled  # Set to Disabled if using hyperthreading
+  name: master
+  platform: {}
+  replicas: 3  # Number of master nodes (usually 3 for HA)
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14  # Cluster network CIDR (default)
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 192.168.0.0/16  # Machine network CIDR (adjust per your infrastructure)
+  networkType: OpenShiftSDN  # Can also be Calico or OVNKubernetes
+  serviceNetwork:
+  - 172.30.0.0/16  # Service network CIDR (default)
+platform:
+  aws:  # Example for AWS, modify based on your cloud provider
+    region: us-east-1
+    userTags:  # Optional: AWS tags to apply to resources
+      Owner: "<owner>"
+      Environment: "Production"
+# Uncomment and configure for other platforms:
+# azure:
+#   region: eastus
+# gcp:
+#   region: us-central1
+# openstack:
+#   cloud: openstack
+fips: false  # Enable FIPS if you require a FIPS-enabled cluster
+pullSecret: '<your-pull-secret>'  # Red Hat pull secret
+sshKey: 'ssh-rsa AAAA...'  # Your SSH public key to access nodes
+
